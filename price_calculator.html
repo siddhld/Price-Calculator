@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price Calculator</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8fafc;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        margin-top: 50px;
+        background: #f9ffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s, box-shadow 0.3s;
+      }
+      h1 {
+        text-align: center;
+        color: #513f69;
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif !important;
+        font-weight: 900;
+        margin-bottom: 30px;
+        margin-top: 5px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input[type="number"] {
+        width: 95%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .result {
+        background: #e7f3fe;
+        border: 1px solid #bee5eb;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+      .result p {
+        margin: 0 0 10px;
+      }
+      .form {
+        background-color: #f9f6e6;
+        padding: 20px 10px;
+        margin: 20px 10px;
+        border-radius: 10px;
+        box-shadow: 1px 6px 10px 1px rgba(128, 128, 128, 0.3);
+      }
+      .toggle-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #8d77ab;
+        color: #fff;
+        border: none;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      .toggle-button:hover {
+        background-color: #6b5b95;
+        transform: scale(1.05);
+      }
+      .dark-mode .toggle-button {
+        background-color: #6b5b95;
+      }
+      .dark-mode {
+        background-color: #333;
+      }
+      .dark-mode .container {
+        background: #e4deee;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+      .dark-mode h1 {
+        color: #000000;
+      }
+      /* .dark-mode input[type="number"] {
+        background-color: #555;
+        border: 1px solid #666;
+        color: #f4f4f9;
+      } 
+      .dark-mode label {
+        color: #ccc;
+      }*/
+
+      .pocket-cost {
+        background-color: #ffe893;
+        border-radius: 10px;
+        padding: 10px 0px 0px 5px;
+      }
+      .profit-cost {
+        background-color: #a7d477;
+        border-radius: 10px;
+        padding: 10px 0px 0px 5px;
+      }
+      .gst-cost {
+        background-color: #ff8383;
+        border-radius: 10px;
+        padding: 10px 0px 0px 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="toggle-button" onclick="toggleDarkMode()">Dark Mode</button>
+    <div class="container">
+      <h1>PRICE CALCULATOR</h1>
+      <div class="form">
+        <div class="pocket-cost">
+          <div class="form-group">
+            <label for="product-cost">Product Cost (₹)</label>
+            <input
+              type="number"
+              id="product-cost"
+              placeholder="Enter product cost"
+            />
+          </div>
+          <div class="form-group">
+            <label for="platform-cost">Platform Cost (%)</label>
+            <input
+              type="number"
+              id="platform-cost"
+              placeholder="Enter platform percentage"
+            />
+          </div>
+          <div class="form-group">
+            <label for="payment-provider-cost">Payment Provider Cost (%)</label>
+            <input
+              type="number"
+              id="payment-provider-cost"
+              placeholder="Enter payment provider percentage"
+            />
+          </div>
+          <div class="form-group">
+            <label for="ads-cost">Ads Cost (₹)</label>
+            <input type="number" id="ads-cost" placeholder="Enter ads cost" />
+          </div>
+          <div class="form-group">
+            <label for="rto-cost">RTO Cost (₹) (Optional)</label>
+            <input type="number" id="rto-cost" placeholder="Enter RTO cost" />
+          </div>
+          <div class="form-group">
+            <label for="rvp-cost">RVP Cost (₹) (Optional)</label>
+            <input type="number" id="rvp-cost" placeholder="Enter RVP cost" />
+          </div>
+        </div>
+        <div class="profit-cost">
+          <div class="form-group">
+            <label for="margin">Margin (%)</label>
+            <input
+              type="number"
+              id="margin"
+              placeholder="Enter margin percentage"
+            />
+          </div>
+        </div>
+        <div class="gst-cost">
+          <div class="form-group">
+            <label for="gst-percentage">GST (%)</label>
+            <input
+              type="number"
+              id="gst-percentage"
+              placeholder="Enter GST percentage"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="result" id="result">
+        <!-- Results will be displayed here -->
+      </div>
+    </div>
+
+    <script>
+      function toggleDarkMode() {
+        const body = document.body;
+        const button = document.querySelector(".toggle-button");
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) {
+          button.textContent = "Light Mode";
+          button.style.backgroundColor = "#6b5b95";
+        } else {
+          button.textContent = "Dark Mode";
+          button.style.backgroundColor = "#8d77ab";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Add event listeners to all fields except optional ones
+        const fields = [
+          "product-cost",
+          "platform-cost",
+          "payment-provider-cost",
+          "ads-cost",
+          "gst-percentage",
+          "margin",
+          "rto-cost", // Include RTO Cost
+          "rvp-cost", // Include RVP Cost
+        ];
+
+        fields.forEach((fieldId) => {
+          const field = document.getElementById(fieldId);
+          field.addEventListener("input", calculatePrice);
+        });
+      });
+
+      function calculatePrice() {
+        const productCost =
+          parseFloat(document.getElementById("product-cost").value) || 0;
+        const platformCostPercent =
+          parseFloat(document.getElementById("platform-cost").value) || 0;
+        const paymentProviderCostPercent =
+          parseFloat(document.getElementById("payment-provider-cost").value) ||
+          0;
+        const adsCost =
+          parseFloat(document.getElementById("ads-cost").value) || 0;
+        const gstPercent =
+          parseFloat(document.getElementById("gst-percentage").value) || 0;
+        const marginPercent =
+          parseFloat(document.getElementById("margin").value) || 0;
+        const rtoCost =
+          parseFloat(document.getElementById("rto-cost").value) || 0;
+        const rvpCost =
+          parseFloat(document.getElementById("rvp-cost").value) || 0;
+
+        // Calculate additional costs
+        const platformCost = (platformCostPercent / 100) * productCost;
+        const paymentProviderCost =
+          (paymentProviderCostPercent / 100) * productCost;
+
+        // Total cost calculation
+        const totalCost =
+          productCost +
+          platformCost +
+          paymentProviderCost +
+          adsCost +
+          rtoCost +
+          rvpCost;
+
+        // Margin
+        const margin = (marginPercent / 100) * totalCost;
+
+        // Final price before GST
+        let finalPrice = totalCost + margin;
+
+        // Add GST
+        const gst = (gstPercent / 100) * finalPrice;
+        finalPrice += gst;
+
+        // Profit calculation
+        const profit = finalPrice - (totalCost + gst);
+
+        // Display results
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = `
+            <p><strong>Final Selling Price (₹):</strong> ${finalPrice.toFixed(
+              2
+            )}</p>
+            <p><strong>Profit (₹):</strong> ${profit.toFixed(2)}</p>
+        `;
+      }
+    </script>
+  </body>
+</html>
