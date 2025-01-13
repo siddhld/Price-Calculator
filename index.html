@@ -92,14 +92,6 @@
       .dark-mode h1 {
         color: #000000;
       }
-      /* .dark-mode input[type="number"] {
-        background-color: #555;
-        border: 1px solid #666;
-        color: #f4f4f9;
-      } 
-      .dark-mode label {
-        color: #ccc;
-      }*/
 
       .pocket-cost {
         background-color: #ffe893;
@@ -121,7 +113,7 @@
   <body>
     <button class="toggle-button" onclick="toggleDarkMode()">Dark Mode</button>
     <div class="container">
-      <h1>PRICE CALCULATOR</h1>
+      <h1>PRICE CALCULATOR <span style="color: #73539c">(Roposo)</span></h1>
       <div class="form">
         <div class="pocket-cost">
           <div class="form-group">
@@ -171,7 +163,7 @@
             />
           </div>
         </div>
-        <div class="gst-cost">
+        <!-- <div class="gst-cost">
           <div class="form-group">
             <label for="gst-percentage">GST (%)</label>
             <input
@@ -180,7 +172,7 @@
               placeholder="Enter GST percentage"
             />
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="result" id="result">
         <!-- Results will be displayed here -->
@@ -202,16 +194,15 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Add event listeners to all fields except optional ones
         const fields = [
           "product-cost",
           "platform-cost",
           "payment-provider-cost",
           "ads-cost",
-          "gst-percentage",
+          //   "gst-percentage",
           "margin",
-          "rto-cost", // Include RTO Cost
-          "rvp-cost", // Include RVP Cost
+          "rto-cost",
+          "rvp-cost",
         ];
 
         fields.forEach((fieldId) => {
@@ -230,8 +221,8 @@
           0;
         const adsCost =
           parseFloat(document.getElementById("ads-cost").value) || 0;
-        const gstPercent =
-          parseFloat(document.getElementById("gst-percentage").value) || 0;
+        // const gstPercent =
+        //   parseFloat(document.getElementById("gst-percentage").value) || 0;
         const marginPercent =
           parseFloat(document.getElementById("margin").value) || 0;
         const rtoCost =
@@ -239,40 +230,33 @@
         const rvpCost =
           parseFloat(document.getElementById("rvp-cost").value) || 0;
 
-        // Calculate additional costs
         const platformCost = (platformCostPercent / 100) * productCost;
         const paymentProviderCost =
           (paymentProviderCostPercent / 100) * productCost;
 
-        // Total cost calculation
-        const totalCost =
-          productCost +
-          platformCost +
-          paymentProviderCost +
-          adsCost +
-          rtoCost +
-          rvpCost;
+        const additionalCost = adsCost + rtoCost + rvpCost;
 
-        // Margin
+        const totalCost = productCost + additionalCost;
+
         const margin = (marginPercent / 100) * totalCost;
 
-        // Final price before GST
         let finalPrice = totalCost + margin;
 
-        // Add GST
-        const gst = (gstPercent / 100) * finalPrice;
-        finalPrice += gst;
+        // const gst = (gstPercent / 100) * finalPrice;
+        // finalPrice += gst;
 
-        // Profit calculation
-        const profit = finalPrice - (totalCost + gst);
+        // const profit = finalPrice - (totalCost + gst);
+        const profit = finalPrice - totalCost;
 
-        // Display results
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML = `
-            <p><strong>Final Selling Price (₹):</strong> ${finalPrice.toFixed(
-              2
-            )}</p>
-            <p><strong>Profit (₹):</strong> ${profit.toFixed(2)}</p>
+          <p><strong>Additional Cost (₹):</strong> ${additionalCost.toFixed(
+            2
+          )}</p>
+          <p><strong>Final Selling Price (₹):</strong> ${finalPrice.toFixed(
+            2
+          )}</p>
+          <p><strong>Profit (₹):</strong> ${profit.toFixed(2)}</p>
         `;
       }
     </script>
