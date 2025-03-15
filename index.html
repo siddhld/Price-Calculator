@@ -344,6 +344,7 @@
                     min="0"
                     max="10000"
                     placeholder="0"
+                    step="0.01"
                   />
                 </div>
                 <div class="form-group">
@@ -354,6 +355,7 @@
                     min="0"
                     max="10000"
                     placeholder="0"
+                    step="0.01"
                   />
                 </div>
                 <div class="form-group">
@@ -604,21 +606,44 @@
           adsCost,
         ];
 
+        //    inputElements.forEach((input) => {
+        //      input.addEventListener("input", function () {
+        //        const min = parseFloat(this.min);
+        //        const max = parseFloat(this.max);
+        //        const value = parseFloat(this.value);
+
+        //        if (value < min) {
+        //          this.value = min;
+        //        } else if (value > max) {
+        //          this.value = max;
+        //        }
+
+        //        // Ensure integers for quantity fields
+        //        if (this.id === "orderQty" || this.id === "cancelledQty") {
+        //          this.value = Math.round(this.value);
+        //        }
+        //      });
+        //    });
+
         inputElements.forEach((input) => {
           input.addEventListener("input", function () {
             const min = parseFloat(this.min);
             const max = parseFloat(this.max);
-            const value = parseFloat(this.value);
+            let value = this.value === "" ? "" : parseFloat(this.value); // Handle empty string
 
-            if (value < min) {
-              this.value = min;
-            } else if (value > max) {
-              this.value = max;
-            }
+            if (value === "") {
+              this.value = ""; // Keep it empty
+            } else {
+              if (value < min) {
+                this.value = min;
+              } else if (value > max) {
+                this.value = max;
+              }
 
-            // Ensure integers for quantity fields
-            if (this.id === "orderQty" || this.id === "cancelledQty") {
-              this.value = Math.round(this.value);
+              // Ensure integers for quantity fields
+              if (this.id === "orderQty" || this.id === "cancelledQty") {
+                this.value = Math.round(value);
+              }
             }
           });
         });
