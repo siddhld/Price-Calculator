@@ -3,262 +3,629 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Price Calculator</title>
+    <title>P&L Calculator</title>
     <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f8fafc;
-        transition: background-color 0.3s, color 0.3s;
-      }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        margin-top: 50px;
-        background: #f9ffff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: background 0.3s, box-shadow 0.3s;
-      }
-      h1 {
-        text-align: center;
-        color: #513f69;
-        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif !important;
-        font-weight: 900;
-        margin-bottom: 30px;
-        margin-top: 5px;
-      }
-      .form-group {
-        margin-bottom: 15px;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-      input[type="number"] {
-        width: 95%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-      .result {
-        background: #e7f3fe;
-        border: 1px solid #bee5eb;
-        border-radius: 4px;
-        padding: 15px;
-        margin-top: 20px;
-      }
-      .result p {
-        margin: 0 0 10px;
-      }
-      .form {
-        background-color: #f9f6e6;
-        padding: 20px 10px;
-        margin: 20px 10px;
-        border-radius: 10px;
-        box-shadow: 1px 6px 10px 1px rgba(128, 128, 128, 0.3);
-      }
-      .toggle-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 10px 20px;
-        background-color: #8d77ab;
-        color: #fff;
-        border: none;
-        font-weight: bold;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s, transform 0.3s;
-      }
-      .toggle-button:hover {
-        background-color: #6b5b95;
-        transform: scale(1.05);
-      }
-      .dark-mode .toggle-button {
-        background-color: #6b5b95;
-      }
-      .dark-mode {
-        background-color: #333;
-      }
-      .dark-mode .container {
-        background: #e4deee;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      }
-      .dark-mode h1 {
-        color: #000000;
+      :root {
+        --primary-color: #6366f1;
+        --primary-hover: #4f46e5;
+        --pm-btn: #2daa9e;
+        --pm-hov: #66d2ce;
+        --secondary-color: #3730a3;
+        --accent-color: #ec4899;
+        --light-color: #f9fafb;
+        --dark-color: #1f2937;
+        --profit-color: #10b981;
+        --loss-color: #ef4444;
+        --card-bg: #ffffff;
+        --border-radius: 16px;
+        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
 
-      .pocket-cost {
-        background-color: #ffe893;
-        border-radius: 10px;
-        padding: 10px 0px 0px 5px;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
       }
-      .profit-cost {
-        background-color: #a7d477;
-        border-radius: 10px;
-        padding: 10px 0px 0px 5px;
+
+      body {
+        background-color: #f5f7fa;
+        color: var(--dark-color);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
-      .gst-cost {
-        background-color: #ff8383;
-        border-radius: 10px;
-        padding: 10px 0px 0px 5px;
+
+      .container {
+        max-width: 100%;
+        margin: 0 5rem;
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 0 0;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .calculator-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .calculator-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        height: 100%;
+      }
+
+      @media screen and (min-width: 1024px) {
+        .calculator-container {
+          flex-direction: column-reverse;
+        }
+      }
+
+      .section-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .input-section,
+      .output-section {
+        background-color: var(--card-bg);
+        padding: 24px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        width: 100%;
+        height: 100%;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--primary-color);
+        font-weight: 600;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 0;
+        background-color: #f9fafb;
+        padding: 12px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        color: var(--dark-color);
+      }
+
+      input[type="number"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #eceef1;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        /* background-color: #f9fafb; */
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        background-color: white;
+      }
+
+      .output-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      .output-item {
+        background-color: #f9fafb;
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+      }
+
+      .output-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .output-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+
+      .output-value {
+        font-size: 1.25rem;
+        color: var(--secondary-color);
+        font-weight: 600;
+      }
+
+      .profit {
+        color: var(--profit-color);
+      }
+
+      .loss {
+        color: var(--loss-color);
+      }
+
+      .highlight-item {
+        grid-column: span 2;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border: 1px solid #e5e7eb;
+      }
+
+      .buttons-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .calculate-btn {
+        background: linear-gradient(
+          135deg,
+          var(--pm-hov) 0%,
+          var(--pm-btn) 60%,
+          var(--pm-btn) 100%
+        );
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        font-size: 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+      }
+
+      .calculate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(99, 102, 241, 0.3);
+      }
+
+      .reset-btn {
+        background-color: white;
+        color: var(--dark-color);
+        border: 1px solid #e5e7eb;
+        padding: 14px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .reset-btn:hover {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+      }
+
+      /* Responsive adjustments */
+      @media screen and (max-width: 768px) {
+        .container {
+          padding: 12px;
+          margin: 0 0.5rem;
+        }
+
+        header {
+          padding: 0 0;
+          margin-bottom: 10px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        h2 {
+          font-size: 1.3rem;
+        }
+
+        .output-section {
+          overflow-y: visible;
+          max-height: none;
+        }
+
+        .highlight-item {
+          grid-column: span 1;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .form-group {
+          padding: 8px;
+        }
+
+        .output-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .output-value {
+          font-size: 1.1rem;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .output-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .buttons-container {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <button class="toggle-button" onclick="toggleDarkMode()">Dark Mode</button>
     <div class="container">
-      <h1>PRICE CALCULATOR <span style="color: #73539c">(Roposo)</span></h1>
-      <div class="form">
-        <div class="pocket-cost">
-          <div class="form-group">
-            <label for="product-cost">Product Cost (₹)</label>
-            <input
-              type="number"
-              id="product-cost"
-              placeholder="Enter product cost"
-            />
+      <header>
+        <h1>P&L Calculator 📟</h1>
+      </header>
+
+      <div class="calculator-wrapper">
+        <div class="calculator-container">
+          <div class="section-container">
+            <div class="input-section">
+              <h2>Input Parameters</h2>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="productCost">Product Cost (₹):</label>
+                  <input
+                    type="number"
+                    id="productCost"
+                    min="0"
+                    max="5000"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="sellingPrice">Selling Price (₹):</label>
+                  <input
+                    type="number"
+                    id="sellingPrice"
+                    min="0"
+                    max="10000"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="orderQty">Order Received QTY:</label>
+                  <input
+                    type="number"
+                    id="orderQty"
+                    min="0"
+                    max="10000"
+                    placeholder="0"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="cancelledQty">Cancelled QTY:</label>
+                  <input
+                    type="number"
+                    id="cancelledQty"
+                    min="0"
+                    max="10000"
+                    placeholder="0"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="rtoCharges">RTO Charges (₹):</label>
+                  <input
+                    type="number"
+                    id="rtoCharges"
+                    min="0"
+                    max="200"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="rtoPercentage">RTO % (Return To Origin):</label>
+                  <input
+                    type="number"
+                    id="rtoPercentage"
+                    min="0"
+                    max="100"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="adsCost">Ads Cost (₹):</label>
+                  <input
+                    type="number"
+                    id="adsCost"
+                    min="0"
+                    max="1000"
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+
+              <div class="buttons-container">
+                <button class="calculate-btn" id="calculateBtn">
+                  Calculate P&L
+                </button>
+                <button class="reset-btn" id="resetBtn">Reset</button>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="platform-cost">Platform Cost (%)</label>
-            <input
-              type="number"
-              id="platform-cost"
-              placeholder="Enter platform percentage"
-            />
-          </div>
-          <div class="form-group">
-            <label for="payment-provider-cost">Payment Provider Cost (%)</label>
-            <input
-              type="number"
-              id="payment-provider-cost"
-              placeholder="Enter payment provider percentage"
-            />
-          </div>
-          <div class="form-group">
-            <label for="ads-cost">Ads Cost (₹)</label>
-            <input type="number" id="ads-cost" placeholder="Enter ads cost" />
-          </div>
-          <div class="form-group">
-            <label for="rto-cost">RTO Cost (₹) (Optional)</label>
-            <input type="number" id="rto-cost" placeholder="Enter RTO cost" />
-          </div>
-          <div class="form-group">
-            <label for="rvp-cost">RVP Cost (₹) (Optional)</label>
-            <input type="number" id="rvp-cost" placeholder="Enter RVP cost" />
+
+          <div class="section-container">
+            <div class="output-section">
+              <h2>P&L Results</h2>
+              <div class="output-grid">
+                <div class="output-item highlight-item">
+                  <div class="output-label">Net Profit/Loss:</div>
+                  <div class="output-value" id="netProfit">₹0.00</div>
+                </div>
+                <div class="output-item highlight-item">
+                  <div class="output-label">Total Revenue Generated:</div>
+                  <div class="output-value" id="totalRevenue">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Total Order Value:</div>
+                  <div class="output-value" id="totalOrderValue">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Product Cost:</div>
+                  <div class="output-value" id="totalProductCost">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Selling Price:</div>
+                  <div class="output-value" id="totalSellingPrice">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Margin (Per Product):</div>
+                  <div class="output-value" id="margin">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Order QTY:</div>
+                  <div class="output-value" id="totalOrderQty">0</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Cancelled QTY:</div>
+                  <div class="output-value" id="totalCancelledQty">0</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Orders Delivered:</div>
+                  <div class="output-value" id="ordersDelivered">0</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">RTO QTY:</div>
+                  <div class="output-value" id="rtoQty">0</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Total RTO Cost:</div>
+                  <div class="output-value" id="totalRtoCost">₹0.00</div>
+                </div>
+                <div class="output-item">
+                  <div class="output-label">Total Ads Cost:</div>
+                  <div class="output-value" id="totalAdsCost">₹0.00</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="profit-cost">
-          <div class="form-group">
-            <label for="margin">Margin (%)</label>
-            <input
-              type="number"
-              id="margin"
-              placeholder="Enter margin percentage"
-            />
-          </div>
-        </div>
-        <!-- <div class="gst-cost">
-          <div class="form-group">
-            <label for="gst-percentage">GST (%)</label>
-            <input
-              type="number"
-              id="gst-percentage"
-              placeholder="Enter GST percentage"
-            />
-          </div>
-        </div> -->
-      </div>
-      <div class="result" id="result">
-        <!-- Results will be displayed here -->
       </div>
     </div>
-
     <script>
-      function toggleDarkMode() {
-        const body = document.body;
-        const button = document.querySelector(".toggle-button");
-        body.classList.toggle("dark-mode");
-        if (body.classList.contains("dark-mode")) {
-          button.textContent = "Light Mode";
-          button.style.backgroundColor = "#6b5b95";
-        } else {
-          button.textContent = "Dark Mode";
-          button.style.backgroundColor = "#8d77ab";
-        }
-      }
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get input elements
+        const productCost = document.getElementById("productCost");
+        const sellingPrice = document.getElementById("sellingPrice");
+        const orderQty = document.getElementById("orderQty");
+        const cancelledQty = document.getElementById("cancelledQty");
+        const rtoCharges = document.getElementById("rtoCharges");
+        const rtoPercentage = document.getElementById("rtoPercentage");
+        const adsCost = document.getElementById("adsCost");
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const fields = [
-          "product-cost",
-          "platform-cost",
-          "payment-provider-cost",
-          "ads-cost",
-          //   "gst-percentage",
-          "margin",
-          "rto-cost",
-          "rvp-cost",
+        // Get output elements
+        const totalProductCost = document.getElementById("totalProductCost");
+        const totalSellingPrice = document.getElementById("totalSellingPrice");
+        const margin = document.getElementById("margin");
+        const totalOrderQty = document.getElementById("totalOrderQty");
+        const totalOrderValue = document.getElementById("totalOrderValue");
+        const totalCancelledQty = document.getElementById("totalCancelledQty");
+        const ordersDelivered = document.getElementById("ordersDelivered");
+        const rtoQty = document.getElementById("rtoQty");
+        const totalRtoCost = document.getElementById("totalRtoCost");
+        const totalAdsCost = document.getElementById("totalAdsCost");
+        const totalRevenue = document.getElementById("totalRevenue");
+        const netProfit = document.getElementById("netProfit");
+
+        // Add event listeners
+        document
+          .getElementById("calculateBtn")
+          .addEventListener("click", calculatePL);
+        document
+          .getElementById("resetBtn")
+          .addEventListener("click", resetCalculator);
+
+        // Format currency function
+        function formatCurrency(amount) {
+          return "₹" + parseFloat(amount).toFixed(2);
+        }
+
+        // Calculate P&L function
+        function calculatePL() {
+          // Get input values
+          const productCostVal = parseFloat(productCost.value) || 0;
+          const sellingPriceVal = parseFloat(sellingPrice.value) || 0;
+          const orderQtyVal = parseInt(orderQty.value) || 0;
+          const cancelledQtyVal = parseInt(cancelledQty.value) || 0;
+          const rtoChargesVal = parseFloat(rtoCharges.value) || 0;
+          const rtoPercentageVal = parseFloat(rtoPercentage.value) || 0;
+          const adsCostVal = parseFloat(adsCost.value) || 0;
+
+          // Validate inputs
+          if (cancelledQtyVal > orderQtyVal) {
+            alert("Cancelled quantity cannot be greater than order quantity!");
+            return;
+          }
+
+          // Calculate basic metrics
+          const marginVal = sellingPriceVal - productCostVal;
+          const totalOrderQtyVal = orderQtyVal;
+          const totalOrderValueVal = sellingPriceVal * orderQtyVal;
+          const totalCancelledQtyVal = cancelledQtyVal;
+
+          // Calculate RTO metrics
+          // RTO (Return to Origin) is calculated based on the percentage of non-cancelled orders
+          const nonCancelledOrders = orderQtyVal - cancelledQtyVal;
+          const rtoQtyVal = Math.round(
+            (rtoPercentageVal / 100) * nonCancelledOrders
+          );
+          const totalRtoCostVal = rtoQtyVal * rtoChargesVal;
+
+          // Calculate delivery metrics
+          const ordersDeliveredVal = nonCancelledOrders - rtoQtyVal;
+
+          // Calculate financial metrics
+          const totalProductCostVal = productCostVal * ordersDeliveredVal;
+          const totalSellingPriceVal = sellingPriceVal * ordersDeliveredVal;
+          const totalRevenueVal = totalSellingPriceVal;
+          const totalAdsCostVal = adsCostVal * orderQtyVal;
+
+          // Net profit calculation
+          const netProfitVal =
+            totalRevenueVal -
+            totalProductCostVal -
+            totalRtoCostVal -
+            totalAdsCostVal;
+
+          // Update output elements
+          totalProductCost.textContent = formatCurrency(totalProductCostVal);
+          totalSellingPrice.textContent = formatCurrency(totalSellingPriceVal);
+          margin.textContent = formatCurrency(marginVal);
+          totalOrderQty.textContent = totalOrderQtyVal;
+          totalOrderValue.textContent = formatCurrency(totalOrderValueVal);
+          totalCancelledQty.textContent = totalCancelledQtyVal;
+          ordersDelivered.textContent = ordersDeliveredVal;
+          rtoQty.textContent = rtoQtyVal;
+          totalRtoCost.textContent = formatCurrency(totalRtoCostVal);
+          totalAdsCost.textContent = formatCurrency(totalAdsCostVal);
+          totalRevenue.textContent = formatCurrency(totalRevenueVal);
+
+          // Style net profit based on positive or negative
+          if (netProfitVal >= 0) {
+            netProfit.textContent = formatCurrency(netProfitVal);
+            netProfit.className = "output-value profit";
+          } else {
+            netProfit.textContent = formatCurrency(netProfitVal);
+            netProfit.className = "output-value loss";
+          }
+        }
+
+        // Reset calculator function
+        function resetCalculator() {
+          // Reset input values
+          productCost.value = "";
+          sellingPrice.value = "";
+          orderQty.value = "";
+          cancelledQty.value = "";
+          rtoCharges.value = "";
+          rtoPercentage.value = "";
+          adsCost.value = "";
+
+          // Reset output values
+          totalProductCost.textContent = "₹0.00";
+          totalSellingPrice.textContent = "₹0.00";
+          margin.textContent = "₹0.00";
+          totalOrderQty.textContent = "0";
+          totalOrderValue.textContent = "₹0.00";
+          totalCancelledQty.textContent = "0";
+          ordersDelivered.textContent = "0";
+          rtoQty.textContent = "0";
+          totalRtoCost.textContent = "₹0.00";
+          totalAdsCost.textContent = "₹0.00";
+          totalRevenue.textContent = "₹0.00";
+          netProfit.textContent = "₹0.00";
+          netProfit.className = "output-value";
+        }
+
+        // Add input validation for min/max values
+        const inputElements = [
+          productCost,
+          sellingPrice,
+          orderQty,
+          cancelledQty,
+          rtoCharges,
+          rtoPercentage,
+          adsCost,
         ];
 
-        fields.forEach((fieldId) => {
-          const field = document.getElementById(fieldId);
-          field.addEventListener("input", calculatePrice);
+        inputElements.forEach((input) => {
+          input.addEventListener("input", function () {
+            const min = parseFloat(this.min);
+            const max = parseFloat(this.max);
+            const value = parseFloat(this.value);
+
+            if (value < min) {
+              this.value = min;
+            } else if (value > max) {
+              this.value = max;
+            }
+
+            // Ensure integers for quantity fields
+            if (this.id === "orderQty" || this.id === "cancelledQty") {
+              this.value = Math.round(this.value);
+            }
+          });
         });
+
+        // Initialize calculator
+        resetCalculator();
       });
-
-      function calculatePrice() {
-        const productCost =
-          parseFloat(document.getElementById("product-cost").value) || 0;
-        const platformCostPercent =
-          parseFloat(document.getElementById("platform-cost").value) || 0;
-        const paymentProviderCostPercent =
-          parseFloat(document.getElementById("payment-provider-cost").value) ||
-          0;
-        const adsCost =
-          parseFloat(document.getElementById("ads-cost").value) || 0;
-        // const gstPercent =
-        //   parseFloat(document.getElementById("gst-percentage").value) || 0;
-        const marginPercent =
-          parseFloat(document.getElementById("margin").value) || 0;
-        const rtoCost =
-          parseFloat(document.getElementById("rto-cost").value) || 0;
-        const rvpCost =
-          parseFloat(document.getElementById("rvp-cost").value) || 0;
-
-        const platformCost = (platformCostPercent / 100) * productCost;
-        const paymentProviderCost =
-          (paymentProviderCostPercent / 100) * productCost;
-
-        const additionalCost = adsCost + rtoCost + rvpCost;
-
-        const totalCost = productCost + additionalCost;
-
-        const margin = (marginPercent / 100) * totalCost;
-
-        let finalPrice = totalCost + margin;
-
-        // const gst = (gstPercent / 100) * finalPrice;
-        // finalPrice += gst;
-
-        // const profit = finalPrice - (totalCost + gst);
-        const profit = finalPrice - totalCost;
-
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = `
-          <p><strong>Additional Cost (₹):</strong> ${additionalCost.toFixed(
-            2
-          )}</p>
-          <p><strong>Final Selling Price (₹):</strong> ${finalPrice.toFixed(
-            2
-          )}</p>
-          <p><strong>Profit (₹):</strong> ${profit.toFixed(2)}</p>
-        `;
-      }
     </script>
   </body>
 </html>
